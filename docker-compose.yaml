@@ -7,3 +7,26 @@ services:
       POSTGRES_DB: games
     ports:
       - 5432:5432
+
+  frontend:
+    build: ./front-end
+    container_name: frontend
+    ports:
+      - 8000:8000
+    environment:
+      BACKEND_HOSTNAME: backend
+
+  backend:
+    build: ./back-end
+    container_name: backend
+    ports:
+      - 5000:5000
+    environment:
+      POSTGRES_DB: games
+      POSTGRES_USER: board_games
+      POSTGRES_PASSWORD: alamakota
+      POSTGRES_HOST: postgres
+
+
+
+
