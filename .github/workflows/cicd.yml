@@ -35,6 +35,7 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
+
         
     - name: Install dependencies
       run: |
@@ -72,6 +73,7 @@ jobs:
       working-directory: front-end
       run: pytest
 
+
   build_and_push_images:
     runs-on: ubuntu-latest
     needs: build
@@ -95,3 +97,4 @@ jobs:
         run: |
           docker build -t ghcr.io/${{ github.repository }}/frontend:latest ./front-end
           docker push ghcr.io/${{ github.repository }}/frontend:latest
+
