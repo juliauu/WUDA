@@ -1,0 +1,97 @@
+name: wuda
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+env:
+  APP_PORT: ${{ secrets.APP_PORT }}
+  BACKEND_HOSTNAME: ${{ secrets.BACKEND_HOSTNAME }}
+  BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+  JWT_KEY: ${{ secrets.JWT_KEY }}
+  PORT: ${{ secrets.PORT }}
+  POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  SERVER_PORT: ${{ secrets.SERVER_PORT }}
+  
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.11"
+        
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest bandit pip-audit
+          pip install -r back-end/requirements.txt
+          pip install -r back-end/requirements_test.txt
+          pip install -r front-end/requirements.txt
+          pip install -r front-end/requirements_test.txt
+
+    - name: Run security scan
+      continue-on-error: true
+      run: bandit -r .
+
+    - name: Run dependency vulnerability scan
+      continue-on-error: true
+      run: |
+          pip-audit -r back-end/requirements.txt
+          pip-audit -r front-end/requirements.txt
+          pip-audit -r back-end/requirements_test.txt
+          pip-audit -r front-end/requirements_test.txt
+          
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Backend tests
+      working-directory: back-end
+      run: pytest 
+
+    - name: Frontend tests
+      working-directory: front-end
+      run: pytest
+
+  build_and_push_images:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/backend:latest ./back-end
+          docker push ghcr.io/${{ github.repository }}/backend:latest
+
+      - name: Build and push frontend image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/frontend:latest ./front-end
+          docker push ghcr.io/${{ github.repository }}/frontend:latest

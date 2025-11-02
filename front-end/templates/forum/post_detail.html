@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<div class="forum-container">
+  <!-- 🔹 Post -->
+  <div class="post-card detail-card">
+    <h2>{{ post.title }}</h2>
+    <p class="post-meta">
+      <strong>Gra:</strong>
+      {% if post.game %}
+        {{ post.game.name }}
+      {% else %}
+        brak przypisanej gry
+      {% endif %}
+      &nbsp; | &nbsp;
+      <strong>Autor:</strong> {{ post.author.username }}
+      &nbsp; | &nbsp;
+      <strong>Data:</strong> {{ post.created_at }}
+    </p>
+    <p class="post-body">{{ post.body }}</p>
+  </div>
+
+  <!-- 🔹 Komentarze -->
+  <h3>Komentarze</h3>
+  <div class="comments-list">
+    {% for comment in post.comments %}
+      <div class="post-card comment-card">
+        <p class="post-meta">
+          <strong>{{ comment.author.username }}</strong>
+          &nbsp; | &nbsp;
+          {{ comment.created_at }}
+        </p>
+        <p>{{ comment.content }}</p>
+      </div>
+    {% else %}
+      <p>Brak komentarzy do wyświetlenia.</p>
+    {% endfor %}
+  </div>
+
+  <!-- 🔹 Formularz dodania komentarza -->
+  <form method="post" action="{{ url_for('post_comment', post_id=post.id) }}" class="comment-form">
+    <textarea name="content" rows="3" placeholder="Dodaj komentarz..." required></textarea>
+    <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
+  </form>
+
+  <!-- 🔹 Powrót -->
+  <a href="{{ url_for('forum') }}" class="btn btn-secondary">← Wróć do forum</a>
+</div>
+{% endblock %}
