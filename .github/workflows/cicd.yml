@@ -7,8 +7,8 @@ on:
     branches: [ "master" ]
 
 permissions:
-  contents: read
-
+  contents: write
+  packages: write
 env:
   APP_PORT: ${{ secrets.APP_PORT }}
   BACKEND_HOSTNAME: ${{ secrets.BACKEND_HOSTNAME }}
