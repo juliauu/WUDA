@@ -90,11 +90,11 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/backend:latest ./back-end
-          docker push ghcr.io/${{ github.repository }}/backend:latest
+          docker build -t ghcr.io/${{ github.repository,, }}/backend:latest ./back-end
+          docker push ghcr.io/${{ github.repository,, }}/backend:latest
 
       - name: Build and push frontend image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/frontend:latest ./front-end
-          docker push ghcr.io/${{ github.repository }}/frontend:latest
+          docker build -t ghcr.io/${{ github.repository,, }}/frontend:latest ./front-end
+          docker push ghcr.io/${{ github.repository,, }}/frontend:latest
 
