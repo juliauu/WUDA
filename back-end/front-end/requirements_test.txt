@@ -1,4 +1,0 @@
-pytest
-Flask
-pytest-mock
-pydantic

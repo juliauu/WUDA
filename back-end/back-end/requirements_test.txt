@@ -1,5 +1,0 @@
-pytest
-pytest-mock
-Flask
-flask-restful
-flask-jwt-extended
