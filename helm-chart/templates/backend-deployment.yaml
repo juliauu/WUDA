@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          ports:
+            - containerPort: 5000
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.backend.POSTGRES_DB | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.backend.POSTGRES_USER | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.backend.POSTGRES_PASSWORD | quote }}
+            - name: POSTGRES_HOST
+              value: {{ .Values.backend.POSTGRES_HOST | quote }}
+            - name: JWT_KEY
+              value: {{ .Values.backend.JWT_KEY | quote }}
+            - name: APP_HOST
+              value: {{ .Values.backend.APP_HOST | quote }}
+            - name: APP_PORT
+              value: {{ .Values.backend.APP_PORT | quote }}
+

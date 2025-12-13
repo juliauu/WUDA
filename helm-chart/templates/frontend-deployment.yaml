@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SECRET_KEY
+              value: {{ .Values.frontend.SECRET_KEY | quote }}
+            - name: BACKEND_HOSTNAME
+              value: {{ .Values.frontend.BACKEND_HOSTNAME | quote }}
+            - name: APP_HOST
+              value: {{ .Values.frontend.APP_HOST | quote }}
+            - name: APP_PORT
+              value: {{ .Values.frontend.APP_PORT | quote }}
+
