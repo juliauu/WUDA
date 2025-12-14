@@ -17,6 +17,11 @@ spec:
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           ports:
             - containerPort: 8000
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
           env:
             - name: SECRET_KEY
               value: {{ .Values.frontend.SECRET_KEY | quote }}
