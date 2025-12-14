@@ -23,12 +23,25 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
           env:
-            - name: SECRET_KEY
-              value: {{ .Values.frontend.SECRET_KEY | quote }}
             - name: BACKEND_HOSTNAME
-              value: {{ .Values.frontend.BACKEND_HOSTNAME | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: BACKEND_HOSTNAME
             - name: APP_HOST
-              value: {{ .Values.frontend.APP_HOST | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: FRONTEND_APP_HOST
             - name: APP_PORT
-              value: {{ .Values.frontend.APP_PORT | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: FRONTEND_APP_PORT
+
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SECRET_KEY
 

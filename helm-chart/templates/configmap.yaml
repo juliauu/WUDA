@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: general-config
+data:
+  POSTGRES_DB: {{ .Values.backend.POSTGRES_DB | quote }}
+  POSTGRES_USER: {{ .Values.backend.POSTGRES_USER | quote }}
+  POSTGRES_HOST: {{ .Values.backend.POSTGRES_HOST | quote }}
+  BACKEND_APP_HOST: {{ .Values.backend.APP_HOST | quote }}
+  BACKEND_APP_PORT: {{ .Values.backend.APP_PORT | quote }}
+
+  FRONTEND_APP_HOST: {{ .Values.frontend.APP_HOST | quote }}
+  FRONTEND_APP_PORT: {{ .Values.frontend.APP_PORT | quote }}
+  BACKEND_HOSTNAME: {{ .Values.frontend.BACKEND_HOSTNAME | quote }}

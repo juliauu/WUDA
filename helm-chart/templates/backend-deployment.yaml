@@ -31,17 +31,39 @@ spec:
             periodSeconds: 15
           env:
             - name: POSTGRES_DB
-              value: {{ .Values.backend.POSTGRES_DB | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: POSTGRES_DB
             - name: POSTGRES_USER
-              value: {{ .Values.backend.POSTGRES_USER | quote }}
-            - name: POSTGRES_PASSWORD
-              value: {{ .Values.backend.POSTGRES_PASSWORD | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: POSTGRES_USER
             - name: POSTGRES_HOST
-              value: {{ .Values.backend.POSTGRES_HOST | quote }}
-            - name: JWT_KEY
-              value: {{ .Values.backend.JWT_KEY | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: POSTGRES_HOST
             - name: APP_HOST
-              value: {{ .Values.backend.APP_HOST | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: BACKEND_APP_HOST
             - name: APP_PORT
-              value: {{ .Values.backend.APP_PORT | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: BACKEND_APP_PORT
 
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: POSTGRES_PASSWORD
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: JWT_KEY
