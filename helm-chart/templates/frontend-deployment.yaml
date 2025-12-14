@@ -28,6 +28,8 @@ spec:
                 configMapKeyRef:
                   name: general-config
                   key: BACKEND_HOSTNAME
+            - name: BACKEND_PORT
+              value: "5000"
             - name: APP_HOST
               valueFrom:
                 configMapKeyRef:

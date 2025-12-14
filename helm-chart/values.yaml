@@ -1,7 +1,7 @@
 backend:
   image:
     repository: ghcr.io/juliauu/wuda/backend
-    tag: latest
+    tag: local
   replicaCount: 1
   service:
     port: 5000
